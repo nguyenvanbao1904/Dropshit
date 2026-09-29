@@ -132,17 +132,7 @@ private final class ShelfActionTargets: NSObject {
         let urls = self.urls
         guard !urls.isEmpty else { return }
         // Cap to avoid spamming windows for huge shelves.
-        for url in urls.prefix(8) {
-            let escaped = url.path.replacingOccurrences(of: "\"", with: "\\\"")
-            let source = """
-            tell application "Finder"
-                activate
-                open information window of (POSIX file "\(escaped)" as alias)
-            end tell
-            """
-            var error: NSDictionary?
-            NSAppleScript(source: source)?.executeAndReturnError(&error)
-        }
+        NSWorkspace.shared.activateFileViewerSelecting(Array(urls.prefix(8)))
     }
 
     @objc func batchRename() {
